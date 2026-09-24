@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - Cyber Sentinel{% endblock %}
+{% block content %}
+<div class="course-container">
+    <h2>{{ title }}</h2>
+    
+    <div class="video-section">
+        <h3>📹 Training Videos</h3>
+        <p class="video-progress">Videos watched: <strong>{{ videos_watched }}/{{ total_videos }}</strong></p>
+        
+        <div class="videos-grid">
+            {% for video in videos %}
+            <div class="video-card">
+                <div class="video-embed">
+                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/{{ video.id }}?enablejsapi=1" 
+                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+                <p class="video-title">{{ video.title }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="quiz-unlock-section">
+        <h3>📋 Quiz Section</h3>
+        {% if videos_watched == total_videos %}
+        <div class="alert alert-success">
+            ✅ All videos watched! Quiz is now unlocked.
+        </div>
+        <a href="{{ url_for('quiz', level_id=level_id) }}" class="btn btn-primary btn-large">Take Quiz</a>
+        {% else %}
+        <div class="alert alert-warning">
+            ⚠️ Watch all {{ total_videos }} videos to unlock the quiz.
+        </div>
+        <button class="btn btn-secondary btn-large" disabled>Quiz Locked</button>
+        {% endif %}
+    </div>
+
+    <div class="game-unlock-section">
+        <h3>🎮 Game Challenge</h3>
+        {% if quiz_passed %}
+        <div class="alert alert-success">
+            ✅ Quiz passed! Game is now unlocked.
+        </div>
+        <a href="{{ url_for('game', level_id=level_id) }}" class="btn btn-success btn-large">Play Game Challenge</a>
+        {% else %}
+        <div class="alert alert-warning">
+            🔒 Game is locked. Complete the quiz first (need 80%+).
+        </div>
+        <button class="btn btn-secondary btn-large" disabled>Game Locked</button>
+        {% endif %}
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+</div>
+{% endblock %}

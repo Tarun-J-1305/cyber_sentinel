@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}Phishing Detection Game - Cyber Sentinel{% endblock %}
+{% block content %}
+<div class="game-container">
+    <div class="game-header">
+        <h2>🎮 Phishing Detection Challenge</h2>
+        <div class="game-stats">
+            <p class="attempts-counter">Attempts: <span id="attempts">{{ attempts_left }}</span>/3</p>
+            <p class="score-counter">Score: <span id="score-display">0</span>/5 ✅</p>
+        </div>
+    </div>
+
+    <div class="game-instructions">
+        <p>🔍 Analyze each URL carefully. Is it safe or a phishing attempt? Get 4/5 correct to win!</p>
+    </div>
+
+    <div class="game-board">
+        <div id="game-content">
+            <div class="url-card" data-url="https://secure.paypa1.com/login">
+                <p class="url-text">https://secure.paypa1.com/login</p>
+                <div class="url-buttons">
+                    <button class="btn btn-success check-url" data-answer="phishing">🚫 Phishing</button>
+                    <button class="btn btn-info check-url" data-answer="safe">✅ Safe</button>
+                </div>
+            </div>
+
+            <div class="url-card" data-url="https://github.com/login">
+                <p class="url-text">https://github.com/login</p>
+                <div class="url-buttons">
+                    <button class="btn btn-success check-url" data-answer="phishing">🚫 Phishing</button>
+                    <button class="btn btn-info check-url" data-answer="safe">✅ Safe</button>
+                </div>
+            </div>
+
+            <div class="url-card" data-url="https://mybank-update-verify.ru/confirm">
+                <p class="url-text">https://mybank-update-verify.ru/confirm</p>
+                <div class="url-buttons">
+                    <button class="btn btn-success check-url" data-answer="phishing">🚫 Phishing</button>
+                    <button class="btn btn-info check-url" data-answer="safe">✅ Safe</button>
+                </div>
+            </div>
+
+            <div class="url-card" data-url="https://amazon.com/account">
+                <p class="url-text">https://amazon.com/account</p>
+                <div class="url-buttons">
+                    <button class="btn btn-success check-url" data-answer="phishing">🚫 Phishing</button>
+                    <button class="btn btn-info check-url" data-answer="safe">✅ Safe</button>
+                </div>
+            </div>
+
+            <div class="url-card" data-url="https://update-apple-id.top/verify-identity">
+                <p class="url-text">https://update-apple-id.top/verify-identity</p>
+                <div class="url-buttons">
+                    <button class="btn btn-success check-url" data-answer="phishing">🚫 Phishing</button>
+                    <button class="btn btn-info check-url" data-answer="safe">✅ Safe</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-result" style="display: none;">
+            <div class="result-box" id="result-content"></div>
+        </div>
+    </div>
+
+    <a href="{{ url_for("course", level_id="beginner") }}" class="btn btn-secondary">← Back to Level</a>
+</div>
+
+<script>
+const correctAnswers = {
+    'https://secure.paypa1.com/login': 'phishing',
+    'https://github.com/login': 'safe',
+    'https://mybank-update-verify.ru/confirm': 'phishing',
+    'https://amazon.com/account': 'safe',
+    'https://update-apple-id.top/verify-identity': 'phishing'
+};
+
+let score = 0;
+let answered = 0;
+const total = Object.keys(correctAnswers).length;
+
+document.querySelectorAll('.check-url').forEach(button => {
+    button.addEventListener('click', function() {
+        const card = this.closest('.url-card');
+        const url = card.getAttribute('data-url');
+        const answer = this.getAttribute('data-answer');
+        const correct = correctAnswers[url];
+        
+        answered++;
+        
+        if (answer === correct) {
+            score++;
+            card.classList.add('correct');
+            card.style.transform = 'scale(1.02)';
+            card.style.boxShadow = '0 0 20px rgba(0, 255, 200, 0.5)';
+            this.textContent = '✅ Correct!';
+            this.classList.add('disabled');
+        } else {
+            card.classList.add('incorrect');
+            card.style.transform = 'scale(0.98)';
+            card.style.boxShadow = '0 0 20px rgba(255, 100, 100, 0.5)';
+            this.textContent = '❌ Wrong!';
+            this.classList.add('disabled');
+        }
+        
+        // Update score display
+        document.getElementById('score-display').textContent = score;
+        
+        // Disable all buttons on this card
+        card.querySelectorAll('.check-url').forEach(btn => btn.disabled = true);
+        
+        if (answered === total) {
+            setTimeout(() => finishGame(), 1500);
+        }
+    });
+});
+
+async function finishGame() {
+    const won = score >= 4; // Need 4/5 correct
+    
+    try {
+        const response = await fetch('{{ url_for("game_submit", level_id="beginner") }}', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({outcome: won ? 'win' : 'lose'})
+        });
+        const data = await response.json();
+        
+        document.getElementById('game-content').style.display = 'none';
+        document.getElementById('game-result').style.display = 'block';
+        
+        const resultHtml = won 
+            ? `<h3>🎉 Victory! 🏆</h3><p>Excellent score: <strong>${score}/${total}</strong> correct!</p><p style="font-size: 18px; color: #00ff88;">🏅 Badge Earned: Phishing Master</p><a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-large">🎓 Back to Dashboard</a>`
+            : `<h3>❌ Try Again</h3><p>Your score: <strong>${score}/${total}</strong> (You need 4/5 correct)</p><p>${data.attempts > 0 ? `<strong>${data.attempts} attempts remaining</strong> - Keep practicing!` : '⏳ <strong>Cooldown active!</strong> Try again in 30 minutes'}</p><a href="{{ url_for('course', level_id='beginner') }}" class="btn btn-secondary btn-large">← Back to Level</a>`;
+        
+        document.getElementById('result-content').innerHTML = resultHtml;
+    } catch (error) {
+        console.error(error);
+        alert('Error submitting game result');
+    }
+}
+</script>
+{% endblock %}

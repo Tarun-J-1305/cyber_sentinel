@@ -1,0 +1,77 @@
+.ctf-container {
+    max-width: 800px;
+    margin: auto;
+    color: #e0e0e0;
+}
+
+.ctf-container h1, .ctf-container h2, .ctf-container h4 {
+    color: #00ffdd;
+    text-shadow: 0 0 5px #00ffdd;
+}
+
+.rules-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid #00ffdd;
+    border-radius: 8px;
+}
+
+.rules-card ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.rules-card li {
+    padding: 5px 0;
+}
+
+#start-challenge-btn {
+    background-color: #00ffdd;
+    color: #0a0a0a;
+    border: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+#start-challenge-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #00ffdd;
+}
+
+.ctf-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.status-bar {
+    display: flex;
+    justify-content: space-around;
+    background-color: #1a1a1a;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+
+.puzzle-card, .submission-area {
+    background-color: #222;
+    border: 1px solid #444;
+}
+
+.puzzle-content pre {
+    background-color: #111;
+    color: #f0f0f0;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #333;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.hints-section button {
+    margin-right: 10px;
+}
+
+#flag-input {
+    background-color: #333;
+    color: #fff;
+    border-color: #555;
+}

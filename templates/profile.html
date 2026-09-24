@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Profile - Cyber Sentinel{% endblock %}
+{% block content %}
+<div class="profile-container">
+    <h2>👤 {{ user.name }}'s Profile</h2>
+
+    <div style="background: rgba(30, 35, 60, 0.8); padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Joined:</strong> {{ user.created_at[:10] }}</p>
+    </div>
+
+    <h3>🏆 Earned Badges</h3>
+    {% if badges %}
+    <div class="badges-grid">
+        {% for badge in badges %}
+        <div class="badge-item">
+            <div class="badge-icon">🎖️</div>
+            <p>{{ badge.badge_key }}</p>
+            <p style="font-size: 12px;">{{ badge.awarded_at[:10] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No badges yet. Complete levels to earn them!</p>
+    {% endif %}
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-large">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

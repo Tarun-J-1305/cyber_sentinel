@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Cyber Sentinel - Learn Online Safety{% endblock %}
+{% block content %}
+<style>
+    .landing-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 100%);
+        padding: 20px;
+    }
+
+    .landing-hero {
+        text-align: center;
+        background: rgba(0, 255, 136, 0.05);
+        border: 2px solid #00ff88;
+        border-radius: 15px;
+        padding: 60px 40px;
+        max-width: 500px;
+        box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+    }
+
+    h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        color: #00ff88;
+        text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    }
+
+    .hero-subtitle {
+        font-size: 1.4em;
+        color: #00ccff;
+        margin: 0 0 20px 0;
+    }
+
+    .hero-description {
+        font-size: 1em;
+        color: #aaa;
+        margin: 0 0 40px 0;
+        line-height: 1.6;
+    }
+
+    .landing-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 15px 40px;
+        font-size: 1.1em;
+        border: 2px solid #00ff88;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #00ff88, #00ccff);
+        color: #000;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 255, 136, 0.4);
+    }
+
+    .btn-secondary {
+        background: rgba(0, 255, 136, 0.2);
+        color: #00ff88;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(0, 255, 136, 0.4);
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+        h1 {
+            font-size: 2em;
+        }
+
+        .landing-hero {
+            padding: 40px 20px;
+        }
+
+        .landing-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="landing-container">
+    <div class="landing-hero">
+        <h1>🛡️ Cyber Sentinel</h1>
+        <p class="hero-subtitle">Gamified Journey into Online Safety</p>
+        <p class="hero-description">Master the essentials of cybersecurity through interactive learning, quizzes, and
+            challenges.</p>
+
+        <div class="landing-buttons">
+            <a href="{{ url_for('login') }}" class="btn btn-primary">🔐 Log In</a>
+            <a href="{{ url_for('signup') }}" class="btn btn-secondary">✍️ Sign Up</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

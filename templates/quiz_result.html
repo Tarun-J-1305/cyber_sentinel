@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Quiz Result - {{ title }}{% endblock %}
+{% block content %}
+<div class="quiz-result-container">
+    <h2>{{ title }} - Quiz Result</h2>
+
+    <div class="result-summary">
+        {% if passed %}
+        <div class="result-passed">
+            <h3>✅ Congratulations! You Passed!</h3>
+            <p class="score-display">Score: <strong>{{ score }}%</strong></p>
+            <p class="correct-display">You got <strong>{{ correct }}/{{ total }}</strong> questions correct.</p>
+        </div>
+        <div class="passed-message">
+            <p>You've unlocked the game challenge! Test your skills and earn a badge.</p>
+            <a href="{{ url_for('game', level_id=level_id) }}" class="btn btn-success btn-large">Play Game Challenge</a>
+        </div>
+        {% else %}
+        <div class="result-failed">
+            <h3>❌ Quiz Not Passed</h3>
+            <p class="score-display">Score: <strong>{{ score }}%</strong></p>
+            <p class="correct-display">You got <strong>{{ correct }}/{{ total }}</strong> questions correct.</p>
+        </div>
+        <div class="failed-message">
+            <p>You need <strong>80%</strong> to pass. Try again!</p>
+            <a href="{{ url_for('quiz', level_id=level_id) }}" class="btn btn-primary btn-large">Retake Quiz</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="result-details">
+        <h3>📋 Question Review</h3>
+        {% if answers %}
+            {% for answer in answers %}
+            <div class="result-question {% if answer.is_correct %}correct{% else %}incorrect{% endif %}">
+                <h4>Q{{ answer.index + 1 }}/{{ total }}: {{ answer.q }}</h4>
+                <div class="question-feedback">
+                    <p><strong>✓ Your answer:</strong> <span style="color: #00ff88;">{{ answer.user_answer }}</span></p>
+                    <p><strong>✓ Correct answer:</strong> <span style="color: #00ff88;">{{ answer.correct_answer }}</span></p>
+                    {% if answer.is_correct %}
+                        <p class="explanation" style="color: #00ff88;">✅ <strong>Correct!</strong> {{ answer.explain }}</p>
+                    {% else %}
+                        <p class="explanation" style="color: #ff6666;">❌ <strong>Incorrect.</strong> {{ answer.explain }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="padding: 20px; background: rgba(255, 100, 100, 0.2); border-radius: 8px; color: #ff6666; border-left: 4px solid #ff6666;">
+                <p>⚠️ <strong>No quiz data found.</strong> This might be a temporary issue.</p>
+                <p>Try refreshing the page or retaking the quiz.</p>
+                <a href="{{ url_for('quiz', level_id=level_id) }}" class="btn btn-primary" style="margin-top: 10px;">← Retake Quiz</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="result-actions">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

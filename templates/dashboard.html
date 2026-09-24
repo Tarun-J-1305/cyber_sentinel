@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - Cyber Sentinel{% endblock %}
+{% block content %}
+<div class="dashboard-hero">
+    <h1>Welcome, {{ session.name }}!</h1>
+    <p>Continue your cybersecurity journey</p>
+</div>
+
+<div class="levels-grid">
+    {% for level in levels %}
+    {% if level.is_locked %}
+    <div class="level-card"
+        style="opacity: 0.5; background: linear-gradient(135deg, rgba(100, 100, 100, 0.1) 0%, rgba(100, 100, 100, 0.1) 100%);">
+        <div class="level-header">
+            🔒
+            <h3>{{ level.title }}</h3>
+        </div>
+        <div class="level-progress">
+            <span class="badge-pill quiz-pending">🔐 LOCKED</span>
+        </div>
+        <div class="level-status">
+            <p style="font-size: 13px; margin: 8px 0; color: #aaa;">Complete previous level to unlock</p>
+        </div>
+        <button class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;" disabled>Enter Level</button>
+    </div>
+    {% else %}
+    <div class="level-card clickable">
+        <div class="level-header">
+            {% if level.id == 'beginner' %}
+            🎯
+            {% elif level.id == 'intermediate' %}
+            ⚡
+            {% else %}
+            🔐
+            {% endif %}
+            <h3>{{ level.title }}</h3>
+        </div>
+        <div class="level-progress">
+            {% if level.game_won %}
+            <span class="badge-pill game-won">🏆 Level Complete!</span>
+            {% elif level.quiz_passed %}
+            <span class="badge-pill quiz-passed">✓ Quiz Passed</span>
+            {% else %}
+            <span class="badge-pill quiz-pending">📚 Quiz Pending</span>
+            {% endif %}
+        </div>
+        <div class="level-status">
+            <p style="font-size: 13px; margin: 8px 0;">
+                {% if not level.quiz_passed %}
+                📺 Videos: {{ level.videos_watched }}/{{ 3 if level.id == 'beginner' else 5 if level.id ==
+                'intermediate' else 3 }}
+                {% elif not level.game_won %}
+                🎮 Game: Unlock by passing quiz
+                {% else %}
+                ✅ All complete!
+                {% endif %}
+            </p>
+        </div>
+        <a href="{{ url_for('course', level_id=level.id) }}" class="btn btn-primary stretched-link">Enter Level</a>
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    {% if ctf_unlocked %}
+    <div class="level-card clickable"
+        style="background: linear-gradient(135deg, rgba(255, 0, 255, 0.15) 0%, rgba(0, 255, 255, 0.15) 100%); border: 2px solid #ff00ff;">
+        <div class="level-header">
+            🚀
+            <h3>Crypto Crucible: Cipher Breaker</h3>
+        </div>
+        <div class="level-progress">
+            <span class="badge-pill game-won">⭐ FINAL CHALLENGE UNLOCKED</span>
+        </div>
+        <div class="level-status">
+            <p style="font-size: 13px; margin: 8px 0; color: #00ffff;">Decode the cipher. Solve the puzzle. Prove
+                your
+                mastery!</p>
+        </div>
+        <a href="{{ url_for('ctf') }}" class="btn btn-primary stretched-link">Play Final CTF</a>
+    </div>
+    {% else %}
+    <div class="level-card"
+        style="opacity: 0.5; background: linear-gradient(135deg, rgba(100, 100, 100, 0.1) 0%, rgba(100, 100, 100, 0.1) 100%);">
+        <div class="level-header">
+            🔒
+            <h3>Crypto Crucible: Cipher Breaker</h3>
+        </div>
+        <div class="level-progress">
+            <span class="badge-pill quiz-pending">🔐 LOCKED</span>
+        </div>
+        <div class="level-status">
+            <p style="font-size: 13px; margin: 8px 0; color: #aaa;">Complete all levels to unlock the final challenge
+            </p>
+        </div>
+        <button class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;" disabled>Play Final CTF</button>
+    </div>
+    {% endif %}
+</div>
+
+<div class="badge-summary">
+    <h3>🏆 Badges Earned: {{ badges|length }}/4</h3>
+    <p><a href="{{ url_for('profile') }}" class="link-style">View your profile and badges →</a></p>
+</div>
+{% endblock %}

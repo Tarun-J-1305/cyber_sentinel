@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Quiz - {{ title }}{% endblock %}
+{% block content %}
+<div class="quiz-container">
+    <h2>{{ title }} - Quiz</h2>
+    <div class="quiz-progress-wrapper">
+        <div class="quiz-progress-bar">
+            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+        </div>
+        <p class="quiz-progress-text">Progress: <span id="answered-count">0</span>/{{ questions|length }} answered</p>
+    </div>
+    <div class="quiz-info-box">
+        <p>📋 Answer all {{ questions|length }} questions. You need 80% to pass!</p>
+    </div>
+
+    <form id="quiz-form" method="POST" action="{{ url_for('quiz_submit', level_id=level_id) }}">
+        {% for question in questions %}
+        <div class="question-block" data-qindex="{{ question.index }}" data-answered="false">
+            <p class="qtext">Q{{ question.index + 1 }}/{{ questions|length }}. {{ question.q }}</p>
+            {% for choice in question.choices %}
+            <label class="option">
+                <input type="radio" name="q{{ question.index }}" value="{{ choice.letter }}" {% if loop.index0 == 0 %}required{% endif %}>
+                {{ choice.text }}
+            </label><br>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary btn-large" id="submit-btn" disabled>Submit Quiz</button>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='quiz.js') }}"></script>
+{% endblock %}

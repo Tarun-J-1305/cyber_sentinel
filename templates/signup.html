@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up - Cyber Sentinel{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>🛡️ Join Cyber Sentinel</h2>
+        
+        <form method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" required placeholder="John Doe">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required placeholder="your@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required placeholder="••••••••">
+            </div>
+            
+            <div class="form-group">
+                <label for="college">College/School</label>
+                <input type="text" id="college" name="college" placeholder="MIT, Stanford, etc.">
+            </div>
+            
+            <div class="form-group">
+                <label for="year">Academic Year</label>
+                <input type="text" id="year" name="year" placeholder="Freshman, Sophomore, etc.">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-large">Create Account</button>
+        </form>
+        
+        <p class="auth-link">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+    </div>
+</div>
+{% endblock %}

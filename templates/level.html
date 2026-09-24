@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - Cyber Sentinel{% endblock %}
+{% block content %}
+<div class="level-container">
+    <h2>{{ title }}</h2>
+    
+    <div class="level-section">
+        <h3>📹 Training Videos</h3>
+        {% if not watched_complete %}
+        <div id="watch-alert" class="alert alert-warning">
+            ⚠️ Watch all {{ total_videos }} videos to unlock the quiz
+        </div>
+        {% else %}
+        <div id="watch-alert" class="alert alert-success" style="display: none;">
+            ✅ All videos watched! Quiz is now unlocked.
+        </div>
+        {% endif %}
+        <div class="videos-grid">
+            {% for video in videos %}
+            <div class="video-card">
+                <div class="video-embed">
+                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/{{ video.id }}?enablejsapi=1" 
+                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                    </iframe>
+                </div>
+                <p class="video-title">{{ video.title }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if quiz_passed %}
+    <div class="level-section">
+        <h3>📝 Quiz Result</h3>
+        <div class="quiz-status-passed">
+            ✅ You passed this quiz! Score: {{ quiz_score }}%
+        </div>
+    </div>
+    {% elif watched_complete %}
+    <div class="level-section">
+        <h3>📝 Knowledge Quiz (Pass 80% to unlock the game)</h3>
+        <div class="quiz-info">
+            <p>Ready to test your knowledge? All videos are complete.</p>
+        </div>
+        <a href="{{ url_for('quiz', level_id=level_id) }}" class="btn btn-primary btn-large">Take Quiz</a>
+    </div>
+    {% else %}
+    <div class="level-section">
+        <h3>📝 Knowledge Quiz</h3>
+        <div class="alert alert-warning">
+            🎬 Complete all training videos to unlock the quiz and test your knowledge!
+        </div>
+    </div>
+    {% endif %}
+
+    {% if quiz_passed %}
+    <div class="level-section">
+        <h3>🎮 Game Challenge</h3>
+        <p>You've passed the quiz! Now test your skills in the game challenge.</p>
+        <a href="{{ url_for('game', level_id=level_id) }}" class="btn btn-success btn-large">Play Game Challenge</a>
+    </div>
+    {% endif %}
+
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+</div>
+{% endblock %}
